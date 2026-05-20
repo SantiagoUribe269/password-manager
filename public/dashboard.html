@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Password Manager</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Bienvenido, <span id="usernameDisplay">usuario</span></h2>
+    <p>Tu bóveda estará disponible en futuras semanas.</p>
+    <button id="logoutBtn">Cerrar sesión</button>
+  </div>
+  <script>
+    //verificar autenticación y cargar nombre de usuario
+    fetch('/api/me', { credentials: 'include' })
+      .then(res => {
+        if (!res.ok) throw new Error('No autenticado');
+        return res.json();
+      })
+      .then(data => {
+        document.getElementById('usernameDisplay').textContent = data.username;
+      })
+      .catch(() => {
+        window.location.href = '/login.html';
+      });
+
+    // Cerrar sesión
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await fetch('/api/logout', { method: 'POST', credentials: 'include' });
+      window.location.href = '/login.html';
+    });
+  </script>
+</body>
+</html>
